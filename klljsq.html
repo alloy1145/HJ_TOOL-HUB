@@ -1,0 +1,372 @@
+<!DOCTYPE html>
+<link rel="icon" href="https://youke1.picui.cn/s1/2025/08/14/689dfc5bcfc2d.ico" type="image/x-icon">
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>卡路里计算器 | 健康生活助手</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdn.jsdelivr.net/npm/font-awesome@4.7.0/css/font-awesome.min.css" rel="stylesheet">
+    
+    <!-- 配置Tailwind自定义颜色和字体 -->
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        primary: '#22c55e', // 绿色作为主色调，代表健康
+                        secondary: '#3b82f6', // 蓝色作为辅助色
+                        neutral: '#f5f5f4', // 浅灰色作为中性色
+                        dark: '#1f2937' // 深色文本
+                    },
+                    fontFamily: {
+                        inter: ['Inter', 'system-ui', 'sans-serif'],
+                    },
+                }
+            }
+        }
+    </script>
+    
+    <style type="text/tailwindcss">
+        @layer utilities {
+            .content-auto {
+                content-visibility: auto;
+            }
+            .card-shadow {
+                box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.05), 0 8px 10px -6px rgba(0, 0, 0, 0.02);
+            }
+            .input-focus {
+                @apply focus:border-primary focus:ring-2 focus:ring-primary/20 focus:outline-none;
+            }
+            .btn-hover {
+                @apply hover:shadow-lg hover:-translate-y-0.5 transition-all duration-300;
+            }
+        }
+    </style>
+</head>
+<body class="font-inter bg-gradient-to-br from-neutral to-white min-h-screen text-dark">
+    <div class="container mx-auto px-4 py-8 max-w-5xl">
+        <!-- 标题区域 -->
+        <header class="text-center mb-10 mt-6">
+            <h1 class="text-[clamp(2rem,5vw,3rem)] font-bold text-dark mb-3 tracking-tight">
+                <span class="text-primary"><i class="fa fa-fire mr-2"></i></span>卡路里计算器
+            </h1>
+            <p class="text-gray-600 max-w-2xl mx-auto text-lg">
+                根据您的身体状况和活动水平，计算每日所需卡路里摄入量，帮助您保持健康生活
+            </p>
+        </header>
+        
+        <main class="grid md:grid-cols-12 gap-8">
+            <!-- 计算器表单 -->
+            <section class="md:col-span-7 bg-white rounded-2xl p-6 md:p-8 card-shadow transform transition-all duration-500 hover:shadow-xl">
+                <h2 class="text-xl md:text-2xl font-semibold mb-6 flex items-center">
+                    <i class="fa fa-calculator text-primary mr-2"></i>输入您的信息
+                </h2>
+                
+                <form id="calorieForm" class="space-y-5">
+                    <!-- 年龄输入 -->
+                    <div class="grid md:grid-cols-2 gap-5">
+                        <div class="space-y-2">
+                            <label for="age" class="block text-sm font-medium text-gray-700">年龄 <span class="text-red-500">*</span></label>
+                            <div class="relative">
+                                <span class="absolute inset-y-0 left-0 flex items-center pl-3 text-gray-500">
+                                    <i class="fa fa-user"></i>
+                                </span>
+                                <input type="number" id="age" name="age" min="10" max="120" required
+                                    class="w-full pl-10 pr-4 py-3 border border-gray-300 rounded-lg input-focus transition-all"
+                                    placeholder="例如：30">
+                                <span class="absolute inset-y-0 right-0 flex items-center pr-3 text-gray-500">岁</span>
+                            </div>
+                        </div>
+                        
+                        <!-- 性别选择 -->
+                        <div class="space-y-2">
+                            <label class="block text-sm font-medium text-gray-700">性别 <span class="text-red-500">*</span></label>
+                            <div class="flex space-x-4">
+                                <label class="flex items-center space-x-2 flex-1 cursor-pointer">
+                                    <input type="radio" name="gender" value="male" required
+                                        class="h-5 w-5 text-primary input-focus">
+                                    <span>男</span>
+                                </label>
+                                <label class="flex items-center space-x-2 flex-1 cursor-pointer">
+                                    <input type="radio" name="gender" value="female"
+                                        class="h-5 w-5 text-primary input-focus">
+                                    <span>女</span>
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- 身高体重输入 -->
+                    <div class="grid md:grid-cols-2 gap-5">
+                        <div class="space-y-2">
+                            <label for="height" class="block text-sm font-medium text-gray-700">身高 <span class="text-red-500">*</span></label>
+                            <div class="relative">
+                                <span class="absolute inset-y-0 left-0 flex items-center pl-3 text-gray-500">
+                                    <i class="fa fa-arrows-v"></i>
+                                </span>
+                                <input type="number" id="height" name="height" min="50" max="250" required
+                                    class="w-full pl-10 pr-4 py-3 border border-gray-300 rounded-lg input-focus transition-all"
+                                    placeholder="例如：175">
+                                <span class="absolute inset-y-0 right-0 flex items-center pr-3 text-gray-500">厘米</span>
+                            </div>
+                        </div>
+                        
+                        <div class="space-y-2">
+                            <label for="weight" class="block text-sm font-medium text-gray-700">体重 <span class="text-red-500">*</span></label>
+                            <div class="relative">
+                                <span class="absolute inset-y-0 left-0 flex items-center pl-3 text-gray-500">
+                                    <i class="fa fa-balance-scale"></i>
+                                </span>
+                                <input type="number" id="weight" name="weight" min="10" max="300" step="0.1" required
+                                    class="w-full pl-10 pr-4 py-3 border border-gray-300 rounded-lg input-focus transition-all"
+                                    placeholder="例如：70">
+                                <span class="absolute inset-y-0 right-0 flex items-center pr-3 text-gray-500">公斤</span>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- 活动水平选择 -->
+                    <div class="space-y-2">
+                        <label for="activity" class="block text-sm font-medium text-gray-700">活动水平 <span class="text-red-500">*</span></label>
+                        <div class="relative">
+                            <span class="absolute inset-y-0 left-0 flex items-center pl-3 text-gray-500">
+                                <i class="fa fa-bolt"></i>
+                            </span>
+                            <select id="activity" name="activity" required
+                                class="w-full pl-10 pr-10 py-3 border border-gray-300 rounded-lg appearance-none input-focus transition-all bg-white">
+                                <option value="" disabled selected>请选择您的活动水平</option>
+                                <option value="1.2">久坐不动（几乎不运动或很少运动）</option>
+                                <option value="1.375">轻度活动（轻度运动或运动1-3天/周）</option>
+                                <option value="1.55">中度活动（中度运动或运动3-5天/周）</option>
+                                <option value="1.725">高度活动（高强度运动或运动6-7天/周）</option>
+                                <option value="1.9">极度活动（非常高强度运动或运动+体力工作）</option>
+                            </select>
+                            <span class="absolute inset-y-0 right-0 flex items-center pr-3 text-gray-500 pointer-events-none">
+                                <i class="fa fa-chevron-down"></i>
+                            </span>
+                        </div>
+                    </div>
+                    
+                    <!-- 目标选择 -->
+                    <div class="space-y-2">
+                        <label for="goal" class="block text-sm font-medium text-gray-700">您的目标</label>
+                        <div class="relative">
+                            <span class="absolute inset-y-0 left-0 flex items-center pl-3 text-gray-500">
+                                <i class="fa fa-bullseye"></i>
+                            </span>
+                            <select id="goal" name="goal"
+                                class="w-full pl-10 pr-10 py-3 border border-gray-300 rounded-lg appearance-none input-focus transition-all bg-white">
+                                <option value="maintain">保持当前体重</option>
+                                <option value="lose">轻度减重（每周约0.5公斤）</option>
+                                <option value="lose-fast">中度减重（每周约1公斤）</option>
+                                <option value="gain">轻度增重（每周约0.5公斤）</option>
+                                <option value="gain-fast">中度增重（每周约1公斤）</option>
+                            </select>
+                            <span class="absolute inset-y-0 right-0 flex items-center pr-3 text-gray-500 pointer-events-none">
+                                <i class="fa fa-chevron-down"></i>
+                            </span>
+                        </div>
+                    </div>
+                    
+                    <!-- 计算按钮 -->
+                    <button type="submit" class="w-full bg-primary hover:bg-primary/90 text-white font-medium py-3 px-4 rounded-lg btn-hover flex items-center justify-center">
+                        <i class="fa fa-calculator mr-2"></i> 计算卡路里需求
+                    </button>
+                </form>
+            </section>
+            
+            <!-- 结果展示区域 -->
+            <section id="results" class="md:col-span-5 bg-white rounded-2xl p-6 md:p-8 card-shadow transform transition-all duration-500 hover:shadow-xl flex flex-col">
+                <h2 class="text-xl md:text-2xl font-semibold mb-6 flex items-center">
+                    <i class="fa fa-line-chart text-secondary mr-2"></i>您的结果
+                </h2>
+                
+                <div id="initialMessage" class="flex-1 flex flex-col items-center justify-center text-center text-gray-500">
+                    <div class="w-24 h-24 mb-4 text-gray-300">
+                        <i class="fa fa-bar-chart text-6xl"></i>
+                    </div>
+                    <p>请填写左侧表单并点击计算按钮，查看您的卡路里需求</p>
+                </div>
+                
+                <div id="resultData" class="hidden space-y-6 flex-1">
+                    <!-- 基础代谢率 -->
+                    <div class="bg-neutral rounded-xl p-4 transform transition-all hover:scale-[1.02]">
+                        <div class="flex justify-between items-start mb-1">
+                            <h3 class="font-medium text-gray-700">基础代谢率 (BMR)</h3>
+                            <span class="text-xs bg-primary/10 text-primary px-2 py-1 rounded-full">维持生命所需</span>
+                        </div>
+                        <p id="bmrResult" class="text-2xl font-bold text-dark">0 卡路里/天</p>
+                        <p class="text-sm text-gray-500 mt-1">您在休息时消耗的能量</p>
+                    </div>
+                    
+                    <!-- 总能量消耗 -->
+                    <div class="bg-neutral rounded-xl p-4 transform transition-all hover:scale-[1.02]">
+                        <div class="flex justify-between items-start mb-1">
+                            <h3 class="font-medium text-gray-700">每日总能量消耗 (TDEE)</h3>
+                            <span class="text-xs bg-secondary/10 text-secondary px-2 py-1 rounded-full">日常活动所需</span>
+                        </div>
+                        <p id="tdeeResult" class="text-2xl font-bold text-dark">0 卡路里/天</p>
+                        <p class="text-sm text-gray-500 mt-1">您每天消耗的总能量</p>
+                    </div>
+                    
+                    <!-- 建议摄入量 -->
+                    <div class="bg-gradient-to-r from-primary/10 to-secondary/10 rounded-xl p-4 transform transition-all hover:scale-[1.02] border border-primary/20">
+                        <div class="flex justify-between items-start mb-1">
+                            <h3 class="font-medium text-gray-700">建议每日摄入量</h3>
+                            <span class="text-xs bg-primary px-2 py-1 rounded-full text-white">根据您的目标</span>
+                        </div>
+                        <p id="intakeResult" class="text-2xl font-bold text-dark">0 卡路里/天</p>
+                        <p id="goalDescription" class="text-sm text-gray-600 mt-1 font-medium"></p>
+                    </div>
+                    
+                    <!-- 营养分配建议 -->
+                    <div>
+                        <h3 class="font-medium text-gray-700 mb-3">营养分配建议</h3>
+                        <div class="space-y-3">
+                            <div>
+                                <div class="flex justify-between text-sm mb-1">
+                                    <span>蛋白质 (20-30%)</span>
+                                    <span id="proteinResult">0 克/天</span>
+                                </div>
+                                <div class="w-full bg-gray-200 rounded-full h-2.5">
+                                    <div class="bg-blue-500 h-2.5 rounded-full" style="width: 25%"></div>
+                                </div>
+                            </div>
+                            <div>
+                                <div class="flex justify-between text-sm mb-1">
+                                    <span>脂肪 (25-35%)</span>
+                                    <span id="fatResult">0 克/天</span>
+                                </div>
+                                <div class="w-full bg-gray-200 rounded-full h-2.5">
+                                    <div class="bg-yellow-500 h-2.5 rounded-full" style="width: 30%"></div>
+                                </div>
+                            </div>
+                            <div>
+                                <div class="flex justify-between text-sm mb-1">
+                                    <span>碳水化合物 (40-50%)</span>
+                                    <span id="carbsResult">0 克/天</span>
+                                </div>
+                                <div class="w-full bg-gray-200 rounded-full h-2.5">
+                                    <div class="bg-green-500 h-2.5 rounded-full" style="width: 45%"></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+        </main>
+        
+        <!-- 信息提示区域 -->
+        <section class="mt-10 bg-white rounded-2xl p-6 card-shadow">
+            <h3 class="text-lg font-semibold mb-3 flex items-center">
+                <i class="fa fa-info-circle text-secondary mr-2"></i>关于卡路里计算
+            </h3>
+            <p class="text-gray-600 mb-2">
+                本计算器使用Mifflin-St Jeor公式估算基础代谢率(BMR)，然后根据活动水平计算每日总能量消耗(TDEE)。
+            </p>
+            <p class="text-gray-600 text-sm">
+                注意：这只是估算值，实际需求可能因个体差异而有所不同。如有健康问题，请咨询专业医生或营养师。
+            </p>
+        </section>
+    </div>
+
+    <script>
+        // 卡路里计算器逻辑
+        document.getElementById('calorieForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            // 获取表单数据
+            const age = parseInt(document.getElementById('age').value);
+            const gender = document.querySelector('input[name="gender"]:checked').value;
+            const height = parseInt(document.getElementById('height').value);
+            const weight = parseFloat(document.getElementById('weight').value);
+            const activity = parseFloat(document.getElementById('activity').value);
+            const goal = document.getElementById('goal').value;
+            
+            // 计算BMR (Mifflin-St Jeor公式)
+            let bmr;
+            if (gender === 'male') {
+                bmr = 10 * weight + 6.25 * height - 5 * age + 5;
+            } else {
+                bmr = 10 * weight + 6.25 * height - 5 * age - 161;
+            }
+            
+            // 计算TDEE
+            const tdee = bmr * activity;
+            
+            // 根据目标调整摄入量
+            let intake;
+            let goalDesc;
+            
+            switch(goal) {
+                case 'lose-fast':
+                    intake = tdee - 1000; // 每周约减1公斤
+                    goalDesc = '中度减重：每天减少1000卡路里，每周约减重1公斤';
+                    break;
+                case 'lose':
+                    intake = tdee - 500; // 每周约减0.5公斤
+                    goalDesc = '轻度减重：每天减少500卡路里，每周约减重0.5公斤';
+                    break;
+                case 'gain-fast':
+                    intake = tdee + 1000; // 每周约增1公斤
+                    goalDesc = '中度增重：每天增加1000卡路里，每周约增重1公斤';
+                    break;
+                case 'gain':
+                    intake = tdee + 500; // 每周约增0.5公斤
+                    goalDesc = '轻度增重：每天增加500卡路里，每周约增重0.5公斤';
+                    break;
+                default: // maintain
+                    intake = tdee;
+                    goalDesc = '保持当前体重：摄入与消耗相当的卡路里';
+            }
+            
+            // 计算营养分配 (蛋白质25%，脂肪30%，碳水45%)
+            const protein = Math.round((intake * 0.25) / 4); // 每克蛋白质4卡路里
+            const fat = Math.round((intake * 0.30) / 9); // 每克脂肪9卡路里
+            const carbs = Math.round((intake * 0.45) / 4); // 每克碳水4卡路里
+            
+            // 显示结果
+            document.getElementById('initialMessage').classList.add('hidden');
+            document.getElementById('resultData').classList.remove('hidden');
+            
+            // 填充结果数据
+            document.getElementById('bmrResult').textContent = Math.round(bmr) + ' 卡路里/天';
+            document.getElementById('tdeeResult').textContent = Math.round(tdee) + ' 卡路里/天';
+            document.getElementById('intakeResult').textContent = Math.round(intake) + ' 卡路里/天';
+            document.getElementById('goalDescription').textContent = goalDesc;
+            document.getElementById('proteinResult').textContent = protein + ' 克/天';
+            document.getElementById('fatResult').textContent = fat + ' 克/天';
+            document.getElementById('carbsResult').textContent = carbs + ' 克/天';
+            
+            // 添加结果出现的动画效果
+            const resultElements = document.querySelectorAll('#resultData > div');
+            resultElements.forEach((el, index) => {
+                el.style.opacity = '0';
+                el.style.transform = 'translateY(10px)';
+                el.style.transition = 'opacity 0.3s ease, transform 0.3s ease';
+                
+                setTimeout(() => {
+                    el.style.opacity = '1';
+                    el.style.transform = 'translateY(0)';
+                }, 100 * index);
+            });
+        });
+        
+        // 页面加载时的动画效果
+        window.addEventListener('load', () => {
+            const sections = document.querySelectorAll('section');
+            sections.forEach((section, index) => {
+                section.style.opacity = '0';
+                section.style.transform = 'translateY(20px)';
+                section.style.transition = 'opacity 0.5s ease, transform 0.5s ease';
+                
+                setTimeout(() => {
+                    section.style.opacity = '1';
+                    section.style.transform = 'translateY(0)';
+                }, 100 * index);
+            });
+        });
+    </script>
+</body>
+</html>
